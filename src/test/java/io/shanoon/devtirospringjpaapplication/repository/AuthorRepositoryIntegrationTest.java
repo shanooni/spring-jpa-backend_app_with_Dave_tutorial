@@ -28,7 +28,7 @@ public class AuthorRepositoryIntegrationTest {
 
     @Test
     public void testThatAuthorCanBeCreatedAndRecalled(){
-        Author author = TestUtils.testAuthor();
+        Author author = TestUtils.testAuthorA();
         underTest.save(author);
 
         Optional<Author> result = underTest.findById(author.getAuthorId());
@@ -36,6 +36,23 @@ public class AuthorRepositoryIntegrationTest {
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(author);
     }
+
+    @Test
+    public void testThatManyAuthorsCanBeCreatedAndRecalled(){
+        Author authorA = TestUtils.testAuthorA();
+        underTest.save(authorA);
+        Author authorB = TestUtils.testAuthorB();
+        underTest.save(authorB);
+        Author authorC = TestUtils.testAuthorC();
+        underTest.save(authorC);
+
+        Iterable<Author> results = underTest.findAll();
+
+        assertThat(results)
+                .hasSize(3)
+                .containsExactly(authorA,authorB,authorC);
+    }
+
 
 
 }
