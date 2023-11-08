@@ -70,6 +70,21 @@ public class AuthorRepositoryIntegrationTest {
         assertThat(retrieveAuthor.get()).isEqualTo(testAuthor);
     }
 
+    @Test
+    public void testThatAuthorCanBeDeleted(){
+        Author testAuthor = TestUtils.testAuthorA();
+        underTest.save(testAuthor);
+
+        Optional<Author> retrieveAuthor = underTest.findById(testAuthor.getAuthorId());
+
+        assertThat(retrieveAuthor).isPresent();
+
+        underTest.deleteById(testAuthor.getAuthorId());
+        Optional<Author> deletedAuthor = underTest.findById(testAuthor.getAuthorId());
+
+        assertThat(deletedAuthor).isEmpty();
+    }
+
 
 
 }
