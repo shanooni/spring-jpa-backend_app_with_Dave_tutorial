@@ -38,18 +38,17 @@ public class BookRepositoryIntegrationTest {
     @Test
     public void testThatManyBooksCanBeCreatedAndRecalled(){
         Author testAuthorA = TestUtils.testAuthorA();
-        Author testAuthorB = TestUtils.testAuthorB();
 
         Book bookByAuthorA = TestUtils.testBookByAuthorA(testAuthorA);
         underTest.save(bookByAuthorA);
-        Book bookByAuthorB = TestUtils.testBookByAuthorB(testAuthorB);
-        underTest.save(bookByAuthorB);
+        Book bookTwoByAuthorA = TestUtils.testBookByAuthorB(testAuthorA);
+        underTest.save(bookTwoByAuthorA);
 
         Iterable<Book> results = underTest.findAll();
 
-        assertThat(underTest.findAll())
+        assertThat(results)
                 .hasSize(2)
-                .containsExactly(bookByAuthorA,bookByAuthorB);
+                .containsExactly(bookByAuthorA,bookTwoByAuthorA);
 
     }
 
