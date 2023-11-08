@@ -54,4 +54,20 @@ public class BookRepositoryIntegrationTest {
     }
 
 
+    @Test
+    public void testThatBookCanBeUpdated(){
+        Author testAuthor = TestUtils.testAuthorA();
+        Book testBook = TestUtils.testBookByAuthorA(testAuthor);
+        underTest.save(testBook);
+
+        testBook.setTitle("In the chest of a woman");
+        underTest.save(testBook);
+
+        Optional<Book> retrieveBook = underTest.findById(testBook.getIsbn());
+
+        assertThat(retrieveBook).isPresent();
+        assertThat(retrieveBook.get().getTitle()).isEqualTo("In the chest of a woman");
+        assertThat(retrieveBook.get().getTitle()).isNotEqualTo("The Greatest");
+
+    }
 }

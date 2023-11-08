@@ -53,6 +53,23 @@ public class AuthorRepositoryIntegrationTest {
                 .containsExactly(authorA,authorB,authorC);
     }
 
+    @Test
+    public void testThatAuthorCanBeUpdated(){
+        //create author
+        Author testAuthor = TestUtils.testAuthorA();
+        underTest.save(testAuthor);
+        //update author's age
+        testAuthor.setAge(78);
+        underTest.save(testAuthor);
+        //find author
+        Optional<Author> retrieveAuthor = underTest.findById(testAuthor.getAuthorId());
+
+        //assert
+        assertThat(retrieveAuthor).isPresent();
+
+        assertThat(retrieveAuthor.get()).isEqualTo(testAuthor);
+    }
+
 
 
 }
