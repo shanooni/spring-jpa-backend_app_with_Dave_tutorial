@@ -9,10 +9,9 @@ import io.shanoon.devtirospringjpaapplication.service.AuthorService;
 import io.shanoon.devtirospringjpaapplication.service.IAuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("api/v1")
 @RestController
@@ -30,5 +29,13 @@ public class AuthorController {
         Author createdAuthor = authorAuthorDTOMapper.mapFrom(author);
         Author savedAuthor = authorService.createAuthor(createdAuthor);
         return new ResponseEntity<>(authorAuthorDTOMapper.mapTo(savedAuthor), HttpStatus.CREATED);
+    }
+    @GetMapping(path = "/authors")
+    public List<AuthorDTO> allAuthors(){
+        List<Author> authors = authorService.allAuthors();
+        return authors.stream().map(
+                author ->
+                        authorAuthorDTOMapper.mapTo(author)
+        ).toList();
     }
 }

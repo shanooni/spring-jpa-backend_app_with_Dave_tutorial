@@ -45,4 +45,24 @@ public class AuthorControllerIntegrationTest {
                 MockMvcResultMatchers.status().isCreated()
         );
     }
+
+    @Test
+    public void testThatAuthorIsCreatedAndReturnsSavedAuthor() throws Exception {
+
+        Author author = TestUtils.testAuthorC();
+        author.setAuthorId(null);
+        String jsonAuthor = mapper.writeValueAsString(author);
+        mockMvc.perform(
+                MockMvcRequestBuilders
+                        .post("/api/v1/authors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonAuthor)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.age").value(45)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value("Fred Amo")
+        );
+    }
 }
