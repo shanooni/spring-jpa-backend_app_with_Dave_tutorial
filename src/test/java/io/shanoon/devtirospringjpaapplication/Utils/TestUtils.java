@@ -1,5 +1,7 @@
 package io.shanoon.devtirospringjpaapplication.Utils;
 
+import io.shanoon.devtirospringjpaapplication.DTO.AuthorDTO;
+import io.shanoon.devtirospringjpaapplication.DTO.BookDTO;
 import io.shanoon.devtirospringjpaapplication.domain.Author;
 import io.shanoon.devtirospringjpaapplication.domain.Book;
 
@@ -47,5 +49,13 @@ public class TestUtils {
                 .title("The Happy Palace")
                 .build();
         return book;
+    }
+
+    public static BookDTO createTestBookDto(AuthorDTO authorDTO) {
+        return BookDTO.builder()
+                .isbn("234-45-6-00-5")
+                .author(authorDTO)
+                .title("War and Peace")
+                .build();
     }
 }
