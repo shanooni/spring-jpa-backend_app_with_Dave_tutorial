@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequestMapping("api/v1")
 @RestController
 public class BookController {
@@ -26,5 +29,14 @@ public class BookController {
         Book savedBook = bookService.createBook(isbn, createdBook);
         BookDTO bookSaved = mapper.mapTo(savedBook);
         return new ResponseEntity<>(bookSaved, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/books")
+    public ResponseEntity<List<BookDTO>> getAllBooks(){
+        List<Book> bookList = bookService.getAllBooks();
+        return new ResponseEntity<>(
+                bookList.stream().map(
+                        book -> mapper.mapTo(book)
+                ).collect(Collectors.toList()),HttpStatus.OK);
     }
 }

@@ -32,6 +32,15 @@ public class TestUtils {
         return author;
     }
 
+    public static AuthorDTO testAuthorDto() {
+        AuthorDTO author = AuthorDTO.builder()
+                .id(3L)
+                .age(34)
+                .name("Fred Amo")
+                .build();
+        return author;
+    }
+
 
     public static Book testBookByAuthorA(final Author author) {
         Book book = Book.builder()

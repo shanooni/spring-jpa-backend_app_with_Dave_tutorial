@@ -1,10 +1,10 @@
 package io.shanoon.devtirospringjpaapplication.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.shanoon.devtirospringjpaapplication.DTO.BookDTO;
 import io.shanoon.devtirospringjpaapplication.Utils.TestUtils;
 import io.shanoon.devtirospringjpaapplication.domain.Book;
+import io.shanoon.devtirospringjpaapplication.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +26,12 @@ public class BookControllerIntegrationTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
+    private BookService bookService;
+
     @Autowired
-    public BookControllerIntegrationTest(MockMvc mockMvc) {
+    public BookControllerIntegrationTest(MockMvc mockMvc,BookService bookService) {
         this.mockMvc = mockMvc;
+        this.bookService = bookService;
         this.objectMapper = new ObjectMapper();
     }
 
@@ -61,6 +64,30 @@ public class BookControllerIntegrationTest {
                 MockMvcResultMatchers.jsonPath("$.isbn").value(testBook.getIsbn())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.title").value("War and Peace")
+        );
+    }
+
+    @Test
+    public void testThatGetAllBookReturnHttp200StatusCode() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatGetAllBooksReturnsListOfBooks() throws Exception {
+        Book testBookByAuthorA = TestUtils.testBookByAuthorA(null);
+        bookService.createBook(testBookByAuthorA.getIsbn(), testBookByAuthorA);
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].isbn").value("134-456-789")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].title").value("The Greatest")
         );
     }
 }
