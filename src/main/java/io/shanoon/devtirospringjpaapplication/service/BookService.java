@@ -41,4 +41,17 @@ public class BookService implements IBookService{
     public boolean isExist(String isbn) {
         return bookRepository.existsById(isbn);
     }
+
+    @Override
+    public Book partialUpdate(String isbn, Book book) {
+        book.setIsbn(isbn);
+
+        return bookRepository.findById(isbn)
+                .map(existingBook -> {
+                    Optional.ofNullable(book.getAuthorId()).ifPresent(existingBook::setAuthorId);
+                    Optional.ofNullable(book.getTitle()).ifPresent(existingBook::setTitle);
+                    return bookRepository.save(existingBook);
+                })
+                .orElseThrow(() -> new RuntimeException("Book does not exist"));
+    }
 }

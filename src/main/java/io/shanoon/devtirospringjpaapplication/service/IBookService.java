@@ -13,4 +13,6 @@ public interface IBookService {
     Optional<Book> getBook(String isbn);
 
     boolean isExist(String isbn);
+
+    Book partialUpdate(String isbn, Book book);
 }

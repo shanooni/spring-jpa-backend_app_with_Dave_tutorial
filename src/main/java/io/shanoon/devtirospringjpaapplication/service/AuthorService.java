@@ -36,4 +36,18 @@ public class AuthorService implements IAuthorService{
         return authorRepository.existsById(authorId);
     }
 
+    @Override
+    public Author partialUpdate(Long authorId, Author author) {
+        author.setAuthorId(authorId);
+
+        return authorRepository.findById(authorId).map(
+                existingAuthor -> {
+                    Optional.ofNullable(author.getAge()).ifPresent(existingAuthor::setAge);
+                    Optional.ofNullable(author.getName()).ifPresent(existingAuthor::setName);
+                    return authorRepository.save(existingAuthor);
+                }).orElseThrow(
+                RuntimeException::new
+        );
+    }
+
 }

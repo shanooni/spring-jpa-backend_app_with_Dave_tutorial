@@ -1,5 +1,6 @@
 package io.shanoon.devtirospringjpaapplication.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.shanoon.devtirospringjpaapplication.DTO.BookDTO;
 import io.shanoon.devtirospringjpaapplication.Utils.TestUtils;
@@ -163,6 +164,61 @@ public class BookControllerIntegrationTest {
                 MockMvcResultMatchers.jsonPath("$.isbn").value("134-456-789")
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.title").value("The Greatest")
+        );
+    }
+
+    @Test
+    public void testThatPartialUpdateWithNonExistingIsbnReturnHttpStatusCode404NotFound() throws Exception {
+        Book bookByAuthorA = TestUtils.testBookByAuthorA(null);
+        Book updateBook = bookService.createUpdateBook(bookByAuthorA.getIsbn(), bookByAuthorA);
+
+        BookDTO testBook = TestUtils.createTestBookDtoByAuthorA(null);
+        testBook.setIsbn(updateBook.getIsbn());
+        String bookJson = objectMapper.writeValueAsString(testBook);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/v1/books/230")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testThatPartialUpdateWithExistingIsbnReturnHttpStatusCode200Ok() throws Exception {
+        Book bookByAuthorA = TestUtils.testBookByAuthorA(null);
+        Book updateBook = bookService.createUpdateBook(bookByAuthorA.getIsbn(), bookByAuthorA);
+
+        BookDTO testBook = TestUtils.createTestBookDtoByAuthorA(null);
+        testBook.setIsbn(updateBook.getIsbn());
+        String bookJson = objectMapper.writeValueAsString(testBook);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/v1/books/"+updateBook.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatPartialUpdateWithExistingIsbnReturnUpdatedBook() throws Exception {
+        Book bookByAuthorA = TestUtils.testBookByAuthorA(null);
+        Book updateBook = bookService.createUpdateBook(bookByAuthorA.getIsbn(), bookByAuthorA);
+
+        BookDTO testBook = TestUtils.createTestBookDtoByAuthorA(null);
+        testBook.setIsbn(updateBook.getIsbn());
+        testBook.setTitle("Happy Ending");
+        String bookJson = objectMapper.writeValueAsString(testBook);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/v1/books/"+updateBook.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value(bookByAuthorA.getTitle())
         );
     }
 }

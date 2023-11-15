@@ -13,4 +13,6 @@ public interface IAuthorService {
     Optional<Author> getAuthor(Long authorId);
 
     boolean isExist(Long authorId);
+
+    Author partialUpdate(Long authorId, Author author);
 }
