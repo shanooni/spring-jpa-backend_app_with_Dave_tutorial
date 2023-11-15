@@ -24,12 +24,19 @@ public class BookController {
         this.mapper = mapper;
     }
 
-    @PutMapping(path = "/books/{isbn}")
-    public ResponseEntity<BookDTO> createBook(@PathVariable("isbn") String isbn, @RequestBody BookDTO bookDTO){
-        Book createdBook = mapper.mapFrom(bookDTO);
-        Book savedBook = bookService.createBook(isbn, createdBook);
-        BookDTO bookSaved = mapper.mapTo(savedBook);
-        return new ResponseEntity<>(bookSaved, HttpStatus.CREATED);
+    @PutMapping("/books/{isbn}")
+    public ResponseEntity<BookDTO> createUpdatedBook(@PathVariable("isbn") String isbn,
+                                                     @RequestBody BookDTO bookDTO){
+        Book book = mapper.mapFrom(bookDTO);
+        boolean booksExist = bookService.isExist(isbn);
+        Book saveBook = bookService.createUpdateBook(isbn, book);
+        BookDTO savedBookDto = mapper.mapTo(saveBook);
+
+        if(booksExist){
+            return new ResponseEntity<>(savedBookDto,HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(savedBookDto,HttpStatus.CREATED);
+        }
     }
 
     @GetMapping(path = "/books")

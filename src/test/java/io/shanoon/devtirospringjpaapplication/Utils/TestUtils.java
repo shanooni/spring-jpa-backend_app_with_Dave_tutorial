@@ -51,6 +51,14 @@ public class TestUtils {
         return book;
     }
 
+    public static BookDTO createTestBookDtoByAuthorA(AuthorDTO authorDTO) {
+        return BookDTO.builder()
+                .isbn("234-45-6-00-5")
+                .author(authorDTO)
+                .title("The Greatest")
+                .build();
+    }
+
     public static Book testBookByAuthorB(final Author author) {
         Book book = Book.builder()
                 .authorId(author)

@@ -51,6 +51,25 @@ public class BookControllerIntegrationTest {
     }
 
     @Test
+    public void testThatUpdatedBookSuccessfullyReturnHttp200Ok() throws Exception {
+        Book bookByAuthorA = TestUtils.testBookByAuthorA(null);
+        Book updateBook = bookService.createUpdateBook(bookByAuthorA.getIsbn(), bookByAuthorA);
+
+        BookDTO testBook = TestUtils.createTestBookDto(null);
+        testBook.setIsbn(updateBook.getIsbn());
+        String bookJson = objectMapper.writeValueAsString(testBook);
+        mockMvc.perform(
+                MockMvcRequestBuilders
+                        .put("/api/v1/books/" + testBook.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
     public void testThatCreatedBookSuccessfullyReturnSavedBook() throws Exception {
         BookDTO testBook = TestUtils.createTestBookDto(null);
         String bookJson = objectMapper.writeValueAsString(testBook);
@@ -68,6 +87,26 @@ public class BookControllerIntegrationTest {
     }
 
     @Test
+    public void testThatUpdateBookSuccessfullyReturnUpdatedBook() throws Exception {
+        Book bookByAuthorA = TestUtils.testBookByAuthorA(null);
+        Book updateBook = bookService.createUpdateBook(bookByAuthorA.getIsbn(), bookByAuthorA);
+
+        BookDTO testBook = TestUtils.createTestBookDtoByAuthorA(null);
+        testBook.setIsbn(updateBook.getIsbn());
+        String bookJson = objectMapper.writeValueAsString(testBook);
+        mockMvc.perform(
+                MockMvcRequestBuilders
+                        .put("/api/v1/books/" + testBook.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.isbn").value(bookByAuthorA.getIsbn())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value(bookByAuthorA.getTitle())
+        );
+    }
+    @Test
     public void testThatGetAllBookReturnHttp200StatusCode() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/books")
@@ -80,7 +119,7 @@ public class BookControllerIntegrationTest {
     @Test
     public void testThatGetAllBooksReturnsListOfBooks() throws Exception {
         Book testBookByAuthorA = TestUtils.testBookByAuthorA(null);
-        bookService.createBook(testBookByAuthorA.getIsbn(), testBookByAuthorA);
+        bookService.createUpdateBook(testBookByAuthorA.getIsbn(), testBookByAuthorA);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/books")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -94,7 +133,7 @@ public class BookControllerIntegrationTest {
     @Test
     public void testThatGetBookReturnsStatusCode200WhenBookExist() throws Exception {
         Book testBookByAuthorA = TestUtils.testBookByAuthorA(null);
-        bookService.createBook(testBookByAuthorA.getIsbn(), testBookByAuthorA);
+        bookService.createUpdateBook(testBookByAuthorA.getIsbn(), testBookByAuthorA);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/books/"+testBookByAuthorA.getIsbn())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,7 +155,7 @@ public class BookControllerIntegrationTest {
     @Test
     public void testThatGetBookReturnsSavedBook() throws Exception {
         Book testBookByAuthorA = TestUtils.testBookByAuthorA(null);
-        bookService.createBook(testBookByAuthorA.getIsbn(), testBookByAuthorA);
+        bookService.createUpdateBook(testBookByAuthorA.getIsbn(), testBookByAuthorA);
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/books/"+testBookByAuthorA.getIsbn())
                         .contentType(MediaType.APPLICATION_JSON)
