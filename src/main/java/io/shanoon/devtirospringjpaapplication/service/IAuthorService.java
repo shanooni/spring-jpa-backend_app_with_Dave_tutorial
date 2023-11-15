@@ -1,14 +1,16 @@
 package io.shanoon.devtirospringjpaapplication.service;
 
-import io.shanoon.devtirospringjpaapplication.DTO.AuthorDTO;
 import io.shanoon.devtirospringjpaapplication.domain.Author;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IAuthorService {
-    Author createAuthor(Author author);
+    Author save(Author author);
 
     List<Author> allAuthors();
+
+    Optional<Author> getAuthor(Long authorId);
+
+    boolean isExist(Long authorId);
 }

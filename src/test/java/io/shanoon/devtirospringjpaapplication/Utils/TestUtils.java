@@ -34,7 +34,7 @@ public class TestUtils {
 
     public static AuthorDTO testAuthorDto() {
         AuthorDTO author = AuthorDTO.builder()
-                .id(3L)
+                .authorId(3L)
                 .age(34)
                 .name("Fred Amo")
                 .build();

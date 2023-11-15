@@ -5,6 +5,7 @@ import io.shanoon.devtirospringjpaapplication.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AuthorService implements IAuthorService{
@@ -15,7 +16,7 @@ public class AuthorService implements IAuthorService{
     }
 
     @Override
-    public Author createAuthor(Author author) {
+    public Author save(Author author) {
         return authorRepository.save(author);
     }
 
@@ -24,4 +25,15 @@ public class AuthorService implements IAuthorService{
         return authorRepository
                 .findAll();
     }
+
+    @Override
+    public Optional<Author> getAuthor(Long authorId) {
+        return authorRepository.findById(authorId);
+    }
+
+    @Override
+    public boolean isExist(Long authorId) {
+        return authorRepository.existsById(authorId);
+    }
+
 }

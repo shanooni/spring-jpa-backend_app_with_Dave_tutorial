@@ -90,4 +90,40 @@ public class BookControllerIntegrationTest {
                 MockMvcResultMatchers.jsonPath("$[0].title").value("The Greatest")
         );
     }
+
+    @Test
+    public void testThatGetBookReturnsStatusCode200WhenBookExist() throws Exception {
+        Book testBookByAuthorA = TestUtils.testBookByAuthorA(null);
+        bookService.createBook(testBookByAuthorA.getIsbn(), testBookByAuthorA);
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/books/"+testBookByAuthorA.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatGetBookReturnsStatusCode404WhenBookDoesNotExist() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/books/00000")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testThatGetBookReturnsSavedBook() throws Exception {
+        Book testBookByAuthorA = TestUtils.testBookByAuthorA(null);
+        bookService.createBook(testBookByAuthorA.getIsbn(), testBookByAuthorA);
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/books/"+testBookByAuthorA.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.isbn").value("134-456-789")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value("The Greatest")
+        );
+    }
 }
