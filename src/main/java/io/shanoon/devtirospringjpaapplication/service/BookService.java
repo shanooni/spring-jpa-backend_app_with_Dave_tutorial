@@ -48,7 +48,6 @@ public class BookService implements IBookService{
 
         return bookRepository.findById(isbn)
                 .map(existingBook -> {
-                    Optional.ofNullable(book.getAuthorId()).ifPresent(existingBook::setAuthorId);
                     Optional.ofNullable(book.getTitle()).ifPresent(existingBook::setTitle);
                     return bookRepository.save(existingBook);
                 })

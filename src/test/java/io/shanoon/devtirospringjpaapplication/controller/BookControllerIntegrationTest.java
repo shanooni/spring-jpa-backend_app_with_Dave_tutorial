@@ -209,7 +209,6 @@ public class BookControllerIntegrationTest {
         Book updateBook = bookService.createUpdateBook(bookByAuthorA.getIsbn(), bookByAuthorA);
 
         BookDTO testBook = TestUtils.createTestBookDtoByAuthorA(null);
-        testBook.setIsbn(updateBook.getIsbn());
         testBook.setTitle("Happy Ending");
         String bookJson = objectMapper.writeValueAsString(testBook);
 

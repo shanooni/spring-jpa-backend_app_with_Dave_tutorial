@@ -225,4 +225,30 @@ public class AuthorControllerIntegrationTest {
                 MockMvcResultMatchers.jsonPath("$.name").value("Shanoon Issaka")
         );
     }
+
+    @Test
+    public void testThatDeleteNonExistingAuthorReturnsStatusCode404NotFound() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/v1/authors/000")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testThatDeleteExistingAuthorReturnStatusCode401NoContent() throws Exception {
+        Author authorC = TestUtils.testAuthorC();
+        Author saveAuthor = authorService.save(authorC);
+
+        AuthorDTO author = TestUtils.testAuthorDto();
+        String authorJson = mapper.writeValueAsString(author);
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/v1/authors/"+saveAuthor.getAuthorId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNoContent()
+        );
+    }
 }

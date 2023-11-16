@@ -50,4 +50,9 @@ public class AuthorService implements IAuthorService{
         );
     }
 
+    @Override
+    public void delete(Long authorId) {
+        authorRepository.deleteById(authorId);
+    }
+
 }
