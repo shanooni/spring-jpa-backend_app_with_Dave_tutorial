@@ -237,16 +237,13 @@ public class AuthorControllerIntegrationTest {
     }
 
     @Test
-    public void testThatDeleteExistingAuthorReturnStatusCode401NoContent() throws Exception {
+    public void testThatDeleteExistingAuthorReturnStatusCode201NoContent() throws Exception {
         Author authorC = TestUtils.testAuthorC();
         Author saveAuthor = authorService.save(authorC);
 
-        AuthorDTO author = TestUtils.testAuthorDto();
-        String authorJson = mapper.writeValueAsString(author);
         mockMvc.perform(
                 MockMvcRequestBuilders.delete("/api/v1/authors/"+saveAuthor.getAuthorId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(authorJson)
         ).andExpect(
                 MockMvcResultMatchers.status().isNoContent()
         );

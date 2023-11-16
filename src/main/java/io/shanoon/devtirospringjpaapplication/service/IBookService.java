@@ -15,4 +15,6 @@ public interface IBookService {
     boolean isExist(String isbn);
 
     Book partialUpdate(String isbn, Book book);
+
+    void delete(String isbn);
 }

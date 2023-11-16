@@ -73,4 +73,14 @@ public class BookController {
         return new ResponseEntity<>(mapper.mapTo(updateBook),HttpStatus.OK);
 
     }
+
+    @DeleteMapping("/books/{isbn}")
+    public ResponseEntity deleteBook(@PathVariable("isbn") String isbn){
+        if(!bookService.isExist(isbn)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        bookService.delete(isbn);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
