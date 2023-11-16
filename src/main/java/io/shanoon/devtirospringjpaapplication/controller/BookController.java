@@ -4,6 +4,8 @@ import io.shanoon.devtirospringjpaapplication.DTO.BookDTO;
 import io.shanoon.devtirospringjpaapplication.domain.Book;
 import io.shanoon.devtirospringjpaapplication.mapper.Mapper;
 import io.shanoon.devtirospringjpaapplication.service.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,12 +42,9 @@ public class BookController {
     }
 
     @GetMapping(path = "/books")
-    public ResponseEntity<List<BookDTO>> getAllBooks(){
-        List<Book> bookList = bookService.getAllBooks();
-        return new ResponseEntity<>(
-                bookList.stream().map(
-                        book -> mapper.mapTo(book)
-                ).collect(Collectors.toList()),HttpStatus.OK);
+    public ResponseEntity<Page<BookDTO>> getAllBooks(Pageable pageable){
+        Page<Book> bookPage = bookService.getAllBooks(pageable);
+        return new ResponseEntity<>(bookPage.map(mapper::mapTo),HttpStatus.OK);
     }
 
     @GetMapping(path = "/books/{isbn}")
